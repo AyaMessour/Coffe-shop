@@ -1,5 +1,22 @@
 import React from "react";
 import { Link } from "@inertiajs/react";
+import { Inertia } from "@inertiajs/inertia"; // Import Inertia for POST requests
+import { toast } from "react-toastify"; // Import toast for notifications
+
+const handleAddToCart = (productId, e) => {
+  e.stopPropagation(); // Prevent navigation when clicking "Add to Cart"
+  const quantity = 1; // Default quantity set to 1 if no state is provided
+
+  // Send a POST request to add the product to the cart
+  Inertia.post(`/cart/add/${productId}`, { quantity }, {
+    onSuccess: () => {
+      toast.success("✅ Product added to cart!", { position: "top-right", autoClose: 2000 });
+    },
+    onError: () => {
+      toast.error("❌ Failed to add product!", { position: "top-right", autoClose: 2000 });
+    }
+  });
+};
 
 export default function ProductDetail({ product }) {
   return (
@@ -11,6 +28,7 @@ export default function ProductDetail({ product }) {
           <ul className="flex space-x-6 text-lg">
             <li><Link href="/" className="hover:text-amber-300">Home</Link></li>
             <li><Link href="/About" className="hover:text-amber-300">About</Link></li>
+            <li><Link href="/cart" className="hover:text-amber-300">Cart</Link></li>
             <li><Link href="/contact" className="hover:text-amber-300">Contact</Link></li>
             <li><Link href="/orders" className="hover:text-amber-300">Orders</Link></li>
           </ul>
@@ -20,15 +38,18 @@ export default function ProductDetail({ product }) {
       {/* Product Details */}
       <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg mt-10">
         <h1 className="text-4xl font-bold text-amber-900 mb-4">{product.name}</h1>
- <img src={product.image_url} alt={product.name}
- className="w-full h-64 object-cover rounded-lg mb-4" />
+        <img 
+          src={`/storage/products/hero-${product.id}.png`} 
+          alt={product.name} 
+          className="w-64 h-64 object-cover rounded-lg mb-4" 
+        />
         <p className="text-gray-700 text-lg">{product.description}</p>
         <p className="font-bold text-amber-700 text-2xl mt-4">{product.price} USD</p>
 
         {/* Add to Cart Button */}
-        <button 
-          onClick={() => Inertia.post(`/cart/add/${product.id}`)}
-          className="mt-4 bg-amber-600 text-white px-6 py-2 rounded-lg hover:bg-amber-700 transition duration-200"
+        <button
+          onClick={(e) => handleAddToCart(product.id, e)}  
+          className="mt-3 bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 hover:scale-105 transition duration-300"
         >
           Add to Cart
         </button>

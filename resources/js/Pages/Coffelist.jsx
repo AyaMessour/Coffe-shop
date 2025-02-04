@@ -1,5 +1,3 @@
-
-
 import { Link } from "@inertiajs/react";
 import React, { useState } from "react";
 import { Inertia } from "@inertiajs/inertia";
@@ -27,7 +25,7 @@ import Image18 from "./photos/hero-18.png";
 import Image19 from "./photos/hero-19.png";
 import Image20 from "./photos/hero-20.png";
 import Image21 from "./photos/hero-21.png";
-import Image23 from "./photos/hero-23.png";
+import Image22 from "./photos/hero-22.png";
 import Image24 from "./photos/hero-24.png";
 
 
@@ -54,12 +52,10 @@ const FoodData = [
   { id: 19, image: Image19, rating: "⭐⭐⭐⭐⭐", price: 11.99, name: "Food Name 19", desc: "Refreshing iced coffee with caramel." },
   { id: 20, image: Image20, rating: "⭐⭐⭐⭐⭐", price: 8.99, name: "Food Name 20", desc: "Classic black coffee with no sugar." },
   { id: 21, image: Image21, rating: "⭐⭐⭐⭐⭐", price: 8.99, name: "Food Name 20", desc: "Classic black coffee with no sugar." },
-  { id: 22, image: Image23, rating: "⭐⭐⭐⭐⭐", price: 13.99, name: "Food Name 23", desc: "Espresso with a touch of hazelnut." },
+  { id: 22, image: Image22, rating: "⭐⭐⭐⭐⭐", price: 13.99, name: "Food Name 22", desc: "Espresso with a touch of hazelnut." },
   { id: 23, image: Image24, rating: "⭐⭐⭐⭐⭐", price: 13.99, name: "Food Name 23", desc: "Espresso with a touch of hazelnut." },
 
 ];
-
-
 
 
 const Coffelist = () => {
@@ -91,41 +87,44 @@ const Coffelist = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
         {FoodData.map((item) => (
-          <Link key={item.id} href={`/product/${item.id}`} className="block">
-            <div className="bg-white p-4 rounded-2xl border shadow-md hover:shadow-lg transform hover:scale-105 transition duration-300 flex flex-col items-center cursor-pointer">
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-40 h-40 object-cover rounded-lg border border-gray-100 mb-3"
-              />
-              <div className="text-center flex-grow">
-                <p className="text-yellow-500">{item.rating}</p>
-                <h2 className="text-md font-semibold text-amber-800">{item.name}</h2>
-                <p className="text-gray-600 text-sm">{item.desc}</p>
-                <p className="text-md font-semibold mt-2 text-amber-700">${item.price}</p>
-              </div>
-
-              {/* Quantity & Add to Cart (Prevent Clicking Navigation) */}
-              <div className="flex items-center space-x-2 mt-2">
-                <label className="text-sm font-medium text-gray-700">Qty:</label>
-                <input
-                  type="number"
-                  min="1"
-                  value={quantities[item.id]}
-                  onChange={(e) => handleQuantityChange(item.id, e.target.value)}
-                  onClick={(e) => e.stopPropagation()} // Prevent click from navigating
-                  className="w-12 text-center border border-gray-300 rounded-md p-1"
+          <div key={item.id} className="block">
+            <Link href={`/product/${item.id}`} className="block">
+              <div className="bg-white p-4 rounded-2xl border shadow-md hover:shadow-lg transform hover:scale-105 transition duration-300 flex flex-col items-center cursor-pointer">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-40 h-40 object-cover rounded-lg border border-gray-100 mb-3"
                 />
+                <div className="text-center flex-grow">
+                  <p className="text-yellow-500">{item.rating}</p>
+                  <h2 className="text-md font-semibold text-amber-800">{item.name}</h2>
+                  <p className="text-gray-600 text-sm">{item.desc}</p>
+                  <p className="text-md font-semibold mt-2 text-amber-700">${item.price}</p>
+                </div>
               </div>
+            </Link>
 
+            {/* Quantity & Add to Cart (Prevent Clicking Navigation) */}
+            <div className="flex items-center space-x-2 mt-2">
+              <label className="text-sm font-medium text-gray-700">Qty:</label>
+              <input
+                type="number"
+                min="1"
+                value={quantities[item.id]}
+                onChange={(e) => handleQuantityChange(item.id, e.target.value)}
+                onClick={(e) => e.stopPropagation()} // Prevent click from navigating
+                className="w-12 text-center border border-gray-300 rounded-md p-1"
+              />
+              
               <button
-                onClick={(e) => handleAddToCart(item.id, e)}
-                className="mt-3 bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 hover:scale-105 transition duration-300"
-              >
-                Add to Cart
-              </button>
+              onClick={(e) => handleAddToCart(item.id, e)}
+              className="mt-3 bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 hover:scale-105 transition duration-300"
+            >
+              Add to Cart
+            </button>
             </div>
-          </Link>
+
+          </div>
         ))}
       </div>
 
