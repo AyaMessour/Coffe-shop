@@ -81,28 +81,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Newsletter */}
-          <div>
-            <h2 className="text-lg font-bold">Good emails.</h2>
-            <p className="mt-2">
-              Enter your email below to be the first to know about new
-              collections and product launches.
-            </p>
-            <form className="mt-3">
-              <input
-                type="email"
-                name="email_address"
-                placeholder="Enter your email address"
-                required
-                className="w-full p-2 rounded-lg text-black"
-              />
-              <button
-                type="submit"
-                className="mt-2 w-full bg-amber-900 text-white py-2 rounded-lg hover:bg-amber-700 transition"
-              >
-                Subscribe
-              </button>
-            </form>
+         
           </div>
         </div>
 
@@ -121,7 +100,7 @@ export default function Footer() {
 </div>
 
         </div>
-      </div>
+      
     </footer>
   );
 }

@@ -1,24 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "@inertiajs/react";
 import { Inertia } from "@inertiajs/inertia";
 import Footer from "./Footer";
 
-export default function CartShow({ cart }) {
+export default function CartShow({ cart: initialCart }) {
+  const [cart, setCart] = useState(initialCart);
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
 
+  // Function to update quantity locally before sending request
+  const updateQuantity = (id, change) => {
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.id === id ? { ...item, quantity: Math.max(1, item.quantity + change) } : item
+      )
+    );
+  };
+
+  // Function to send update request to Laravel
+  const handleQuantityChange = (id, change) => {
+    updateQuantity(id, change);
+    Inertia.post(change > 0 ? `/cart/increase/${id}` : `/cart/decrease/${id}`);
+  };
+
   const handleRemove = (id) => {
+    setCart(cart.filter((item) => item.id !== id)); // Remove from state
     Inertia.post(`/cart/remove/${id}`);
   };
 
-  // Calculate total price
+  // Calculate total price dynamically
   const totalPrice = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
   const discountedPrice = totalPrice - discount;
 
-  // Apply promo code logic
   const applyPromo = () => {
     if (promoCode === "COFFEE10") {
-      setDiscount(totalPrice * 0.1); // 10% discount
+      setDiscount(totalPrice * 0.1);
     } else {
       setDiscount(0);
       alert("Invalid promo code!");
@@ -32,9 +48,9 @@ export default function CartShow({ cart }) {
         <div className="container mx-auto flex justify-between items-center">
           <h1 className="text-2xl font-bold">Lily's Coffee</h1>
           <ul className="flex space-x-6 text-lg">
-            <li><Link href="/Home" className="hover:text-amber-300">Home</Link></li>
+            <li><Link href="/" className="hover:text-amber-300">Home</Link></li>
             <li><Link href="/About" className="hover:text-amber-300">About</Link></li>
-            <li><Link href="/contact" className="hover:text-amber-300">Contact</Link></li>
+            <li><Link href="/Contact" className="hover:text-amber-300">Contact</Link></li>
             <li><Link href="/orders" className="hover:text-amber-300">Orders</Link></li>
           </ul>
         </div>
@@ -52,8 +68,24 @@ export default function CartShow({ cart }) {
               <div key={item.id} className="p-4 border-b border-amber-300 flex justify-between items-center">
                 <div>
                   <h2 className="text-lg font-semibold text-amber-800">{item.product.name}</h2>
-                  <p className="text-gray-700">Quantity: {item.quantity}</p>
-                  <p className="font-semibold text-amber-600">{item.product.price} USD</p>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleQuantityChange(item.id, -1)}
+                      className="bg-gray-300 px-2 py-1 rounded"
+                    >
+                      -
+                    </button>
+                    <p className="text-gray-700">{item.quantity}</p>
+                    <button
+                      onClick={() => handleQuantityChange(item.id, 1)}
+                      className="bg-gray-300 px-2 py-1 rounded"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <p className="font-semibold text-amber-600">
+                    {(item.product.price * item.quantity).toFixed(2)} USD
+                  </p>
                 </div>
                 <button
                   onClick={() => handleRemove(item.id)}
@@ -69,6 +101,8 @@ export default function CartShow({ cart }) {
               <p className="text-lg font-semibold text-amber-800">
                 Total: <span className="text-amber-700">{discountedPrice.toFixed(2)} USD</span>
               </p>
+<br />
+
 
               <div className="mt-4 flex flex-col items-center">
                 <input
@@ -78,6 +112,7 @@ export default function CartShow({ cart }) {
                   onChange={(e) => setPromoCode(e.target.value)}
                   className="px-4 py-2 border border-amber-300 rounded-lg text-center focus:ring-2 focus:ring-amber-500"
                 />
+                <br />
                 <button
                   onClick={applyPromo}
                   className="mt-2 bg-amber-600 text-white px-6 py-2 rounded-lg hover:bg-amber-700 transition duration-200"

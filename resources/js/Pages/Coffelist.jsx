@@ -1,5 +1,10 @@
+
+
+import { Link } from "@inertiajs/react";
 import React, { useState } from "react";
 import { Inertia } from "@inertiajs/inertia";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Footer from "./Footer";
 import Image1 from "./photos/hero-1.jpg";
 import Image2 from "./photos/hero-2.png";
@@ -54,6 +59,9 @@ const FoodData = [
 
 ];
 
+
+
+
 const Coffelist = () => {
   const [quantities, setQuantities] = useState(
     FoodData.reduce((acc, item) => ({ ...acc, [item.id]: 1 }), {})
@@ -64,61 +72,65 @@ const Coffelist = () => {
     setQuantities({ ...quantities, [id]: newValue });
   };
 
-  const handleAddToCart = (productId) => {
+  const handleAddToCart = (productId, e) => {
+    e.stopPropagation(); // Prevent navigation when clicking "Add to Cart"
     const quantity = quantities[productId];
-    console.log(`Adding product ${productId} with quantity ${quantity}`); // Debugging
+
     Inertia.post(`/cart/add/${productId}`, { quantity }, {
-      onSuccess: () => alert("Product added to cart!"),
-      onError: () => alert("Failed to add product to cart."),
+      onSuccess: () => toast.success("✅ Product added to cart!", { position: "top-right", autoClose: 2000 }),
+      onError: () => toast.error("❌ Failed to add product!", { position: "top-right", autoClose: 2000 }),
     });
   };
 
   return (
     <div className="container py-14 bg-gradient-to-t from-amber-100 to-amber-200">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-semibold">Top List</h1>
-        <p>Our best-selling coffee selection</p>
+        <h1 className="text-4xl font-semibold text-amber-800">Top List</h1>
+        <p className="text-gray-600">Our best-selling coffee selection</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
         {FoodData.map((item) => (
-          <div
-            key={item.id}
-            className="bg-white p-5 lg:p-6 rounded-3xl border shadow-md hover:shadow-lg flex flex-col items-center transition duration-300"
-          >
-            <img
-              src={item.image}
-              alt={item.name}
-              className="w-64 h-64 object-cover rounded-full border border-gray-200 mb-4"
-            />
-            <div className="text-center flex-grow">
-              <p className="text-red-500">{item.rating}</p>
-              <p className="text-lg font-semibold">{item.name}</p>
-              <p className="text-gray-600">{item.desc}</p>
-              <p className="text-lg font-semibold mt-2">${item.price.toFixed(2)}</p>
-            </div>
-
-            <div className="flex items-center space-x-3 mt-2">
-              <label className="text-sm font-medium">Quantity:</label>
-              <input
-                type="number"
-                min="1"
-                value={quantities[item.id]}
-                onChange={(e) => handleQuantityChange(item.id, e.target.value)}
-                className="w-16 text-center border border-gray-300 rounded-md"
+          <Link key={item.id} href={`/product/${item.id}`} className="block">
+            <div className="bg-white p-4 rounded-2xl border shadow-md hover:shadow-lg transform hover:scale-105 transition duration-300 flex flex-col items-center cursor-pointer">
+              <img
+                src={item.image}
+                alt={item.name}
+                className="w-40 h-40 object-cover rounded-lg border border-gray-100 mb-3"
               />
-            </div>
+              <div className="text-center flex-grow">
+                <p className="text-yellow-500">{item.rating}</p>
+                <h2 className="text-md font-semibold text-amber-800">{item.name}</h2>
+                <p className="text-gray-600 text-sm">{item.desc}</p>
+                <p className="text-md font-semibold mt-2 text-amber-700">${item.price}</p>
+              </div>
 
-            <button
-              onClick={() => handleAddToCart(item.id)}
-              className="mt-4 bg-amber-600 text-white px-6 py-2 rounded-full hover:scale-105 transition duration-200"
-            >
-              Add to Cart
-            </button>
-          </div>
+              {/* Quantity & Add to Cart (Prevent Clicking Navigation) */}
+              <div className="flex items-center space-x-2 mt-2">
+                <label className="text-sm font-medium text-gray-700">Qty:</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={quantities[item.id]}
+                  onChange={(e) => handleQuantityChange(item.id, e.target.value)}
+                  onClick={(e) => e.stopPropagation()} // Prevent click from navigating
+                  className="w-12 text-center border border-gray-300 rounded-md p-1"
+                />
+              </div>
+
+              <button
+                onClick={(e) => handleAddToCart(item.id, e)}
+                className="mt-3 bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 hover:scale-105 transition duration-300"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </Link>
         ))}
       </div>
 
+      <ToastContainer />
+      <br />
       <Footer />
     </div>
   );

@@ -5,6 +5,8 @@ import { createRoot } from 'react-dom/client';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 
+// Ajouter le token CSRF dans Inertia
+
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
 createInertiaApp({
@@ -14,12 +16,8 @@ createInertiaApp({
         const root = createRoot(el);
 
         root.render(
-        
-              <App {...props} />
-             
-            
-          );
-          
+            <App {...props} />
+        );
     },
     progress: {
         color: '#4B5563',

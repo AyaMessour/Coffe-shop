@@ -10,7 +10,7 @@ function About() {
         <div className="container mx-auto flex justify-between items-center">
           <h1 className="text-2xl font-bold">Lily's Coffee</h1>
           <ul className="flex space-x-6 text-lg">
-            <li><Link href="/Home" className="hover:text-amber-300">Home</Link></li>
+            <li><Link href="/" className="hover:text-amber-300">Home</Link></li>
             <li><Link href="/cart" className="hover:text-white">Cart</Link></li>
             <li><Link href="/About" className="hover:text-amber-300">About</Link></li>
             <li><Link href="/contact" className="hover:text-amber-300">Contact</Link></li>

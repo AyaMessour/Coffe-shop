@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "@inertiajs/react";
-import Coffelist from "./Coffelist"; // Import Coffelist component
+import Coffelist from "./Coffelist"; // Import Coffelist compon
 import hero1 from "./photos/hero-1.jpg";
 import hero2 from "./photos/hero-10.png";
-import hero4 from "./photos/hero-7.png";
-
+import hero6 from "./photos/hero-15.png";
+import hero7 from "./photos/hero-18.png";
+import hero5 from "./photos/hero-4.png";
 export default function Home() {
-  const images = [hero1, hero2, hero4];
+  const images = [hero1, hero2, hero6,hero5,hero7];
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -25,10 +26,14 @@ export default function Home() {
         <div className="container mx-auto flex justify-between items-center">
           <h1 className="text-2xl font-bold ">Lily's Coffee</h1>
           <ul className="flex space-x-6 text-lg">
-            <li><Link href="/Home" className="hover:text-amber-300">Home</Link></li>
-            <li><Link href="/cart" className="hover:text-white">Cart</Link></li>
+
+
+            <li><Link href="/Menu" className="hover:text-amber-300">Menu</Link></li>
+
+            <li><Link href="/cart" className="hover:text-amber-300">Cart</Link></li>
             <li><Link href="/About" className="hover:text-amber-300">About</Link></li>
-            <li><Link href="/contact" className="hover:text-amber-300">Contact</Link></li>
+            <li><Link href="/Contact" className="hover:text-amber-300">Contact</Link></li>
+            
             <li><Link href="/orders" className="hover:text-amber-300">Orders</Link></li>
           </ul>
         </div>

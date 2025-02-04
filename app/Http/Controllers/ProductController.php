@@ -14,29 +14,23 @@ class ProductController extends Controller
         return Inertia::render('Products/TopList', ['products' => $products]);
     }
 
-    public function store(Request $request)
+    public function indexaa()
+{
+    $products = Product::all();
+    return Inertia::render('Menu', ['products' => $products]);
+}
+public function show($id)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048'
-        ]);
-
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
-            $imageUrl = "/storage/$imagePath";
-        } else {
-            $imageUrl = null;
-        }
-
-        Product::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'price' => $request->price,
-            'image' => $imageUrl,
-        ]);
-
-        return redirect()->back();
+        $product = Product::findOrFail($id);
+        return Inertia::render('ProductDetail', ['product' => $product]);
     }
+    public function show1($id)
+    {
+        $product = Product::findOrFail($id);
+        return response()->json([
+            'product' => $product,
+            'image_url' => $product->image_url
+        ]);
+    }
+    
 }

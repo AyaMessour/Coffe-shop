@@ -56,4 +56,33 @@ class CartController extends Controller
 
         return redirect()->route('cart.show')->with('error', 'Cart item not found.');
     }
+
+    public function increaseQuantity($cartId)
+{
+    $cartItem = Cart::where('user_id', auth()->id())->find($cartId);
+
+    if ($cartItem) {
+        $cartItem->increment('quantity');
+        return redirect()->route('cart.show')->with('success', 'Quantity increased.');
+    }
+
+    return redirect()->route('cart.show')->with('error', 'Cart item not found.');
+}
+
+public function decreaseQuantity($cartId)
+{
+    $cartItem = Cart::where('user_id', auth()->id())->find($cartId);
+
+    if ($cartItem) {
+        if ($cartItem->quantity > 1) {
+            $cartItem->decrement('quantity');
+        } else {
+            $cartItem->delete(); // Remove item if quantity becomes zero
+        }
+        return redirect()->route('cart.show')->with('success', 'Quantity updated.');
+    }
+
+    return redirect()->route('cart.show')->with('error', 'Cart item not found.');
+}
+
 }
